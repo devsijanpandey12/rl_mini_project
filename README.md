@@ -43,7 +43,9 @@ The environment was implemented from scratch and checked against **Taxi-v3 in Gy
   <img src="results/figures/01_task_map_and_reference.png" alt="Taxi grid with walls, passenger at R, destination B, and an exact reference route" width="520">
 </p>
 
-**Figure 1. Task and environment.** Orange segments lead to passenger pickup at R; teal segments lead to delivery at B. This is an exact reference route used for comparison with the learned policy.
+**Figure 1. Task and environment.** This exact reference route starts at the taxi icon, collects the passenger at R, and ends at destination B. It is used to compare route efficiency with the learned policy.
+
+**Route-map key:** Orange dashed lines show movements while the passenger is **not on board**; teal solid lines show movements with the passenger **on board**. Thick dark navy lines are walls and the map boundary. The purple square marks the waiting passenger, and the flag marks the destination. The taxi and passenger icons show the initial state in these static maps.
 
 ## 4. Methodology and Work Completed
 
@@ -82,7 +84,7 @@ Learning curves use a trailing 100-episode average. Shaded uncertainty bands sho
   <img src="results/figures/02_baseline_learning.png" alt="Four training plots comparing Q-learning and SARSA on return, successful deliveries, trip length, and illegal service actions" width="1000">
 </p>
 
-**Figure 2. Learning from experience.** Q-learning and SARSA improve over 5,000 training episodes across 10 independent seeds. The four panels show return, delivery success, trip length, and illegal pickup/drop-off attempts. These curves retain training exploration at ε = 0.1; greedy evaluation is reported below.
+**Figure 2. Learning from experience.** **Teal curves represent Q-learning; orange curves represent SARSA.** Each line is the mean trailing 100-episode average across 10 independent seeds, with matching shaded bands showing **±1 standard error**. The four panels show return, delivery success, trip length, and illegal pickup/drop-off attempts over 5,000 episodes. Training retains exploration at ε = 0.1; greedy evaluation is reported below. Here, colors identify algorithms; in the route maps, they identify passenger status.
 
 ## 6. Key Results
 
@@ -108,6 +110,8 @@ The full notebook discusses the measured effects of α, γ, ε, exploration deca
 </p>
 
 **Figure 3. A learned delivery in action.** From the same initial state, the trained greedy Q-learning policy (training seed 11) delivers in **14 actions**, earning a return of **7**. The random illustration is capped at 35 actions for readability; the trained trip uses the standard 200-action cap. This is one illustrative trip; the table above reports performance across all allowed initial states.
+
+Both maps use the **Figure 1 route key**: orange dashed means passenger not on board, and teal solid means passenger on board. Orange on the random route can include wandering; it does not imply movement toward the passenger. Only legal cell-to-cell movements produce line segments. Stationary pickup/drop-off, blocked movement, and illegal service attempts still count toward actions and return but add no segment. Repeated movements can overlap, so the number of visible segments is not the total action count.
 
 ## 7. Visualizations and Validation
 

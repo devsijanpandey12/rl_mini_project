@@ -11,6 +11,10 @@ _INK = "#18364B"
 _MUTED = "#63788A"
 _PAPER = "#FAFAF5"
 _PALETTE = ["#187E83", "#E38645", "#6477B1", "#B85475", "#8D9550", "#735A91"]
+# Route-map colors encode passenger status, whereas learning-curve colors encode
+# algorithms/conditions. Named constants keep the route and its legend consistent.
+_EMPTY_ROUTE_COLOR = _PALETTE[1]    # Orange: passenger not on board.
+_ONBOARD_ROUTE_COLOR = _PALETTE[0]  # Teal: passenger on board.
 _LANDMARK_NAMES = ("R", "G", "Y", "B")
 _LANDMARK_COLORS = ("#CC5A59", "#278868", "#BE9123", "#3978AD")
 _ACTION_NAMES = ("South", "North", "East", "West", "Pickup", "Dropoff")
@@ -112,9 +116,15 @@ def _board(ax, env, title="", passenger=0, destination=3,
         decoded = [tuple(env.decode(int(s))) for s in states]
         for first, second in zip(decoded[:-1], decoded[1:]):
             if _road_open(env, first[:2], second[:2]):
-                color = _PALETTE[1] if first[2] < 4 else _PALETTE[0]
+                # Color/style use the passenger status BEFORE this road move.
+                # Empty-taxi moves include random wandering, not just progress
+                # toward pickup. Pickup/dropoff and wall no-ops have no segment
+                # because the taxi does not change cells; they still count as actions.
+                empty_taxi = first[2] < 4
+                color = _EMPTY_ROUTE_COLOR if empty_taxi else _ONBOARD_ROUTE_COLOR
                 ax.plot([first[1], second[1]], [first[0], second[0]],
-                        color=color, alpha=.70, linewidth=3.4,
+                        color=color, linestyle="--" if empty_taxi else "-",
+                        alpha=.85, linewidth=3.4,
                         solid_capstyle="round", zorder=7)
     for index, ((row, col), name, color) in enumerate(zip(
             landmarks, _LANDMARK_NAMES, _LANDMARK_COLORS)):
@@ -159,8 +169,14 @@ def draw_taxi_map(ax, env, state, title="", path=None, show_policy=False, q=None
     """Draw true road walls, passenger, destination, taxi and observed road moves.
 
     Path segments are drawn only between adjacent cells connected by a road.
-    Orange means travelling toward pickup; teal means carrying the passenger.
+    Orange dashed lines mean the passenger is not on board, including wandering.
+    Teal solid lines mean the passenger is on board during that road move.
+    Dark navy lines are walls/boundary, not travelled routes. These map colors
+    encode passenger status, not the algorithms identified in learning graphs.
+    Stationary pickup/dropoff, blocked and illegal actions have no road segment.
+    Repeated moves can overlap, so the lines do not encode action order/count.
     Policy arrows hold the supplied state's passenger/destination context fixed.
+    Callers reserve a bottom margin for the state caption and route legend.
     """
     row, col, passenger, destination = map(int, env.decode(int(state)))
     values = actions = None
@@ -174,6 +190,19 @@ def draw_taxi_map(ax, env, state, title="", path=None, show_policy=False, q=None
         "DELIVERED" if passenger == destination else f"waiting at {_LANDMARK_NAMES[passenger]}")
     ax.text(.5, -.14, f"Passenger: {passenger_text}  |  Destination: {_LANDMARK_NAMES[destination]}",
             transform=ax.transAxes, ha="center", fontsize=8.5, color=_INK)
+    if path is not None:
+        # Show both statuses even if this particular trip never picks anyone up.
+        handles = [
+            Line2D([0], [0], color=_EMPTY_ROUTE_COLOR, linestyle="--", linewidth=3,
+                   label="Orange dashed: passenger not on board"),
+            Line2D([0], [0], color=_ONBOARD_ROUTE_COLOR, linestyle="-", linewidth=3,
+                   label="Teal solid: passenger on board"),
+            Line2D([0], [0], color=_INK, linestyle="-", linewidth=3,
+                   label="Dark navy: wall / map boundary"),
+        ]
+        ax.legend(handles=handles, loc="upper center", bbox_to_anchor=(.5, -.21),
+                  frameon=False, fontsize=7.8, handlelength=3, labelcolor=_INK,
+                  borderaxespad=0)
     return ax
 
 
@@ -457,12 +486,12 @@ def animate_taxi(env,trajectory,interval=300):
     actions=list(trajectory["actions"])
     if not states or len(states)!=len(rewards)+1 or len(actions)!=len(rewards):
         raise ValueError("Trajectory needs initial state + one state, action and reward per transition")
-    fig,ax=plt.subplots(figsize=(7.1,7.5),facecolor=_PAPER)
-    fig.subplots_adjust(left=.11,right=.93,top=.80,bottom=.17)
+    fig,ax=plt.subplots(figsize=(7.1,8.1),facecolor=_PAPER)
+    fig.subplots_adjust(left=.11,right=.93,top=.80,bottom=.29)
     fig.suptitle("A learned taxi trip, one decision at a time",x=.07,y=.97,
                  ha="left",fontsize=16,color=_INK,weight="bold")
     status=fig.text(.07,.88,"",fontsize=10,color=_INK)
-    fig.text(.07,.035,"Passenger: purple square  •  Destination: flag  •  Orange: before pickup  •  Teal: on board",
+    fig.text(.07,.025,"Purple square: waiting passenger  •  Flag: destination  •  Lines: recorded road moves",
              fontsize=8,color=_MUTED)
 
     def update(frame):

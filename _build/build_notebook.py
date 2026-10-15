@@ -286,7 +286,15 @@ md("""
 
     Our declared demonstration uses **state 423**: taxi at (4,1), passenger waiting at R,
     destination B. This start and training seed 11 are selected before the experiment plots.
-    Orange route segments are before pickup; teal segments are with the passenger on board.
+    **Route-map legend:** orange dashed segments mean the passenger is **not on board**;
+    teal solid segments mean the passenger **is on board**. These describe passenger status
+    during each road move, rather than which algorithm is used. Dark navy lines are walls
+    and the map boundary. The purple square marks the waiting passenger; the flag marks
+    the destination. Icons in static route maps show the supplied initial state.
+
+    Only road-connected cell-to-cell moves produce segments. Pickup/drop-off, illegal
+    service attempts and blocked moves still count as actions but create no line segment.
+    Repeated moves can overlap; line length does not tell us the total action count.
 """)
 code("""
     env = TaxiEnv()
@@ -299,7 +307,7 @@ code("""
     OPTIMAL_MEAN_STEPS = float(optimal_steps_all.mean())
     fig, ax = plt.subplots(figsize=(7.2, 7.4))
     draw_taxi_map(ax, env, DEMO_START, title="Taxi task | exact reference route", path=reference_route)
-    fig.subplots_adjust(bottom=.17, top=.88)
+    fig.subplots_adjust(bottom=.29, top=.88)
     save_figure(fig, "01_task_map_and_reference")
     display(pd.DataFrame([{"state": DEMO_START, "decoded": env.decode(DEMO_START),
                            "optimal_actions": shortest_steps(DEMO_START), "optimal_return": 21-shortest_steps(DEMO_START)},
@@ -320,6 +328,11 @@ md("""
     Hypothesis: both algorithms can learn the service task, while their different targets
     may produce different behavior under continued exploration. We measure these outcomes
     rather than assuming either algorithm must be superior.
+
+    **Learning-curve legend:** teal = Q-learning; orange = SARSA. Here colors identify
+    algorithms, whereas the route-map colors identify passenger status. Solid curves are
+    trailing 100-episode means averaged across ten independent seeds; the matching shaded
+    bands show ±1 standard error. Training exploration remains epsilon = 0.1.
 """)
 code("""
     q_runs = run_condition(BASE, "Q-learning")
@@ -551,17 +564,23 @@ md("""
 
     The demonstration uses the declared start 423 and first training seed 11. The all-start
     tables above are the performance evidence; this one trip is an illustration.
+
+    **Route colors:** orange dashed = passenger not on board; teal solid = passenger on
+    board. The same key applies to both panels and the animation. Orange in the random
+    panel can include wandering; it does not imply progress toward pickup. Dark navy lines
+    are walls/boundary. The plotted segments show road moves, so stationary actions are
+    included in the reported action count without adding a segment; repeated moves overlap.
 """)
 code(r"""
     save_figure(plot_policy_slices(env,q_runs[0].q,passenger=0,destination=3),"13_conditioned_policy_and_values")
     before_route=rollout(TaxiEnv(),np.zeros((500,6)),DEMO_START,max_steps=35,seed=300_011,policy="random")
     learned_route=rollout(TaxiEnv(),q_runs[0].q,DEMO_START,epsilon=0,max_steps=MAX_STEPS,seed=300_011)
-    fig,axes=plt.subplots(1,2,figsize=(12,6.2))
+    fig,axes=plt.subplots(1,2,figsize=(12,7.4))
     for ax,label,route in zip(axes,("Before: uniform random (35-action cap)","After: trained Q-learning (200-action cap)"),(before_route,learned_route)):
         outcome="delivered" if route["success"] else "not delivered"
         draw_taxi_map(ax,env,DEMO_START,title=f"{label}\n{route['steps']} actions | return {route['return']:.0f} | {outcome}",path=route)
-    fig.subplots_adjust(bottom=.20,top=.83,wspace=.23)
-    fig.text(.08,.025,"Taxi/passenger icons show the common initial state; colored lines show the recorded trip. Different demo caps are explicit above.",fontsize=8.3,color="#65788A")
+    fig.subplots_adjust(bottom=.29,top=.83,wspace=.23)
+    fig.text(.08,.025,"Icons show the common initial state; routes show road moves (stationary actions are not segments). Demo caps differ as labeled.",fontsize=8.3,color="#65788A")
     save_figure(fig,"14_before_and_after_actual_trips")
     display(pd.DataFrame([{ "policy":label, **{k:r[k] for k in
                              ("steps","return","success","illegal_actions","wall_hits","wrong_dropoffs")}}
