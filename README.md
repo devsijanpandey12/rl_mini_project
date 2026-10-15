@@ -39,6 +39,12 @@ The study covers environment construction, agent implementation, training, contr
 
 The environment was implemented from scratch and checked against **Taxi-v3 in Gymnasium 1.2.3**. All **3,000 state–action transitions** and **500 action masks** matched the reference implementation. Attempting to move into a wall leaves the taxi in place and costs one step; it does not represent a physical collision.
 
+<p align="center">
+  <img src="results/figures/01_task_map_and_reference.png" alt="Taxi grid with walls, passenger at R, destination B, and an exact reference route" width="520">
+</p>
+
+**Figure 1. Task and environment.** Orange segments lead to passenger pickup at R; teal segments lead to delivery at B. This is an exact reference route used for comparison with the learned policy.
+
 ## 4. Methodology and Work Completed
 
 1. **Environment implementation:** State encoding/decoding, walls, passenger interactions, rewards, transitions, and episode handling.
@@ -72,6 +78,12 @@ The baseline uses **α = 0.3, γ = 0.95, and ε = 0.1**. The study contains **10
 
 Learning curves use a trailing 100-episode average. Shaded uncertainty bands show **±1 standard error across independent seeds**, rather than confidence intervals. Evaluation is performed without further learning.
 
+<p align="center">
+  <img src="results/figures/02_baseline_learning.png" alt="Four training plots comparing Q-learning and SARSA on return, successful deliveries, trip length, and illegal service actions" width="1000">
+</p>
+
+**Figure 2. Learning from experience.** Q-learning and SARSA improve over 5,000 training episodes across 10 independent seeds. The four panels show return, delivery success, trip length, and illegal pickup/drop-off attempts. These curves retain training exploration at ε = 0.1; greedy evaluation is reported below.
+
 ## 6. Key Results
 
 The following results use **greedy evaluation (ε = 0)** over every allowed initial state. Learned-agent results are averaged across 10 trained seeds. The exact reference is computed directly.
@@ -91,9 +103,15 @@ SARSA did not consistently learn a successful greedy policy within this training
 
 The full notebook discusses the measured effects of α, γ, ε, exploration decay, and masking using the saved experimental results.
 
+<p align="center">
+  <img src="results/figures/14_before_and_after_actual_trips.png" alt="Recorded routes from the same starting state: random actions fail to deliver within 35 actions, while trained greedy Q-learning delivers in 14 actions" width="1000">
+</p>
+
+**Figure 3. A learned delivery in action.** From the same initial state, the trained greedy Q-learning policy (training seed 11) delivers in **14 actions**, earning a return of **7**. The random illustration is capped at 35 actions for readability; the trained trip uses the standard 200-action cap. This is one illustrative trip; the table above reports performance across all allowed initial states.
+
 ## 7. Visualizations and Validation
 
-The completed notebook includes **15 static figures**, an animated learned trip, and written interpretation of the results. Visuals cover training return, delivery success, illegal actions, learning speed, parameter sensitivity, policy/value maps, and route optimality.
+The three selected figures above introduce the task, learning progress, and learned behavior. The completed notebook includes the full collection of **15 static figures**, an animated learned trip, and written interpretation of the results. Visuals cover training return, delivery success, illegal actions, learning speed, parameter sensitivity, policy/value maps, and route optimality.
 
 All **25 code cells** were executed successfully. The saved validation includes **13 core check groups and 5 study-integrity check groups**, for **18 passing groups**. Raw episode data, final Q-tables, visit counts, configurations, and execution records are retained for inspection.
 
