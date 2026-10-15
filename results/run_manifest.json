@@ -1,0 +1,53 @@
+{
+  "project": "Taxi pickup and drop-off with tabular Q-learning",
+  "seeds": [
+    11,
+    23,
+    37,
+    41,
+    53,
+    67,
+    79,
+    83,
+    97,
+    101
+  ],
+  "episodes_per_run": 5000,
+  "step_cap": 200,
+  "conditions": 10,
+  "training_runs": 100,
+  "training_episodes": 500000,
+  "evaluation_episodes_main": 21300,
+  "checkpoint_evaluation_episodes": 21000,
+  "python": "3.11.17 | packaged by conda-forge | (main, Oct 13 2026, 16:36:10) [MSC v.1944 64 bit (AMD64)]",
+  "python_executable": "C:\\Users\\sijan\\anaconda3\\envs\\taxi_rl\\python.exe",
+  "platform": "Windows-10-10.0.26200-SP0",
+  "packages": {
+    "numpy": "2.4.6",
+    "pandas": "3.0.6",
+    "matplotlib": "3.11.2",
+    "pillow": "12.3.0",
+    "gymnasium": "1.2.3",
+    "ipykernel": "7.4.0",
+    "nbformat": "5.11.1",
+    "nbclient": "0.11.0"
+  },
+  "total_training_seconds": 99.7859062999994,
+  "baseline": {
+    "alpha": 0.3,
+    "gamma": 0.95,
+    "epsilon": 0.1,
+    "episodes": 5000,
+    "max_steps": 200,
+    "seed": 11,
+    "schedule": "constant",
+    "epsilon_min": 0.01,
+    "decay_episodes": 4000,
+    "action_masking": false,
+    "algorithm": "q_learning"
+  },
+  "all_initial_states_evaluated": 300,
+  "uncertainty": "standard error across independently trained seed means",
+  "training_policy_model_planning": false,
+  "evaluation_updates": false
+}

@@ -1,0 +1,14 @@
+check,status,evidence
+State encoding and valid sets,PASS,All 500 roundtrips; 300 initial and 400 decision states
+Gymnasium exhaustive dynamics and masks,PASS,Gymnasium 1.2.3: all 3000 transitions and 500 masks match
+Hand-specified Taxi semantics,PASS,Legal pickup; +20 terminal dropoff; legal −1 wrong-landmark dropoff; −10 illegal; walls; nonabsorbing P sources
+Stateful simulator and masks,PASS,Pure model queries; step/reset; all 500 masks exclude only illegal actions and no-op movements
+TD hand calculations and terminal target,PASS,Q-learning:2→2.3; SARSA:2→−.4; terminal20 target ignores huge next Q
+"Exploration, ties, and masked backups",PASS,Uniform unmasked exploration/ties; masked selection and target exclude high-valued forbidden actions
+Input validation,PASS,12 invalid configs and 4 invalid state/action pairs rejected
+"Reproducibility, starts, and visit counts",PASS,Identical seeded runs; independent snapshots; paired start sequences across algorithms/masks; exact visitation accounting
+Training return and outcome accounting,PASS,Return=−steps−9×illegal+21×success; success/truncation complementary
+Administrative cutoff bootstrapping,PASS,10000 one-step episodes match independent replay and differ from terminal-cutoff bug; target includes .9×3
+SARSA carries its sampled next action,PASS,10 complete seeded episode replays match independent on-policy updates exactly
+Exact BFS reference and frozen evaluation,PASS,All 300 starts: Q* achieves BFS minimum steps and 21−steps return; VI 19 iterations; Q unchanged
+Exploration schedule,PASS,Linear .50→.05 across 101 episodes then fixed floor

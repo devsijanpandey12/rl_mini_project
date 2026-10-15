@@ -1,0 +1,11 @@
+# Direct Python dependencies; environment.yml is the primary Conda setup.
+numpy==2.4.6
+pandas==3.0.6
+matplotlib==3.11.2
+pillow==12.3.0
+gymnasium==1.2.3
+ipykernel==7.4.0
+jupyterlab==4.6.4
+nbformat==5.11.1
+nbclient==0.11.0
+nbconvert==7.17.2

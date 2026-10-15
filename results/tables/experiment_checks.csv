@@ -1,0 +1,6 @@
+check,status
+"100 training runs: reward accounting, valid episodes, snapshots, visits",PASS
+Identical episode-start sequences across all conditions for each seed,PASS
+Every evaluation covers all 300 starts; reward accounting valid,PASS
+Evaluation leaves Q unchanged; planning reference reaches BFS optimum,PASS
+Masked training/evaluation have no excluded illegal or wall actions,PASS

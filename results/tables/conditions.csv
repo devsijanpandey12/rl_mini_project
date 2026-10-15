@@ -1,0 +1,11 @@
+condition_id,label,alpha,gamma,epsilon,episodes,max_steps,schedule,epsilon_min,decay_episodes,action_masking,algorithm,runtime_seconds
+0,Q-learning,0.3,0.95,0.1,5000,200,constant,0.01,4000,False,q_learning,11.527961699999878
+1,SARSA,0.3,0.95,0.1,5000,200,constant,0.01,4000,False,sarsa,9.581531600000062
+2,alpha=0.1,0.1,0.95,0.1,5000,200,constant,0.01,4000,False,q_learning,12.759536199999957
+3,alpha=0.7,0.7,0.95,0.1,5000,200,constant,0.01,4000,False,q_learning,8.427226799999971
+4,gamma=0.5,0.3,0.5,0.1,5000,200,constant,0.01,4000,False,q_learning,8.84144329999981
+5,gamma=1,0.3,1.0,0.1,5000,200,constant,0.01,4000,False,q_learning,9.12777129999995
+6,epsilon=0.01,0.3,0.95,0.01,5000,200,constant,0.01,4000,False,q_learning,7.457784899999979
+7,epsilon=0.3,0.3,0.95,0.3,5000,200,constant,0.01,4000,False,q_learning,8.956069599999864
+8,Linear epsilon .3 to .01,0.3,0.95,0.3,5000,200,linear,0.01,4000,False,q_learning,7.8354532999999265
+9,Q-learning + mask,0.3,0.95,0.1,5000,200,constant,0.01,4000,True,q_learning,15.2711276

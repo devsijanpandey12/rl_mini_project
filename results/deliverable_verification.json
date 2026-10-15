@@ -1,0 +1,13 @@
+{
+  "status": "PASS",
+  "executed_code_cells": 25,
+  "self_contained_notebook": true,
+  "training_runs": 100,
+  "training_episodes": 500000,
+  "main_evaluation_trips": 21300,
+  "initial_states_per_evaluation": 300,
+  "implementation_and_study_check_groups": 18,
+  "verified_static_figures": 15,
+  "custom_transition_rows": 3000,
+  "exact_reference_starts": 300
+}

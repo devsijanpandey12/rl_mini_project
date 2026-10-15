@@ -1,0 +1,3 @@
+condition,seeds,late_return,late_return_se,late_steps,late_steps_se,late_illegal_actions,late_illegal_actions_se,late_wall_hits,late_wall_hits_se,late_success,late_success_se,late_truncated,late_truncated_se,early_500_return,whole_training_return,total_illegal_actions
+Q-learning,10,2.2564,0.07162048124198366,14.744,0.03471791084344412,0.4444,0.007482126851519039,0.2598,0.011463759321347328,1.0,0.0,0.0,0.0,-97.64000000000001,-7.831,4264.6
+Q-learning + mask,10,6.143800000000001,0.06348924668354824,14.856200000000001,0.06348924668354823,0.0,0.0,0.0,0.0,1.0,0.0,0.0,0.0,-32.0038,2.30108,0.0
