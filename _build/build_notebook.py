@@ -40,7 +40,12 @@ md(r"""
 
     **Reinforcement learning mini-project · video deadline: 16 October 2026**
 
-    **Student:** _Add your name, roll number, and class._
+    | Student Information | Details |
+    | :--- | :--- |
+    | **Name** | Sijan Pandey |
+    | **Roll No.** | 11 |
+    | **Programme** | B.Tech in Artificial Intelligence |
+    | **Semester** | 8th Semester |
 
     **Task:** A taxi must navigate a small road grid, collect a waiting passenger, and deliver
     them to their requested destination. It learns through rewards and penalties rather
@@ -758,7 +763,11 @@ md("""
     | 4:30–5:20 | Animation, policy slices, full-start evaluation | Pickup and delivery; context-dependent policy; exact BFS reference |
     | 5:20–6:00 | Measured findings and limitations | Actual numbers, any failures, off-policy costs, and finite convergence limits |
 
-    Add your identity before recording. Practice explaining one transition and the TD update
+    **Suggested opening:** "I am Sijan Pandey, Roll No. 11, a student of B.Tech in
+    Artificial Intelligence, 8th Semester. My mini project is Taxi Pickup and Drop-off
+    Using Q-Learning."
+
+    Practice explaining one transition and the TD update
     without reading the paragraph. Describe the actual findings in section 22, including any
     surprising or unsuccessful outcomes. The code, tests, and experiments are the contribution;
     the animation helps communicate it.
@@ -773,6 +782,7 @@ md("## 26. References\n\n"+references+"\n\nThe Taxi task originates in Dietteric
 notebook=nbf.v4.new_notebook(cells=cells)
 notebook.metadata.update({"kernelspec":{"name":"taxi_rl","display_name":"Python (taxi_rl)","language":"python"},
                           "language_info":{"name":"python","version":"3.11"},
+                          "authors":[{"name":"Sijan Pandey"}],
                           "title":"Taxi Pickup and Drop-off Using Q-Learning"})
 nbf.validate(notebook)
 for index, cell in enumerate(cells):
